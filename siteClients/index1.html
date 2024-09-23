@@ -118,6 +118,52 @@
 
   const database = firebase.database();
 
+//----------------------------Switch--------------------------------------------------------
+  // Récupérer les références des éléments des boutons basculants
+  const toggleSwitch1 = document.getElementById('toggleSwitch1');
+
+
+   // Référence à la base de données Firebase
+   const firebaseRef1 = firebase.database().ref('recev/etatB');
+
+                 // Écouter les modifications de la valeur dans la base de données
+                 firebaseRef1.on('value', function(snapshot) {
+          const position = snapshot.val();
+          toggleSwitch1.checked = position === 1;
+        if (toggleSwitch1.checked) {
+          observ1.textContent = "Activé";
+          observ1.style.color = "blue"; // Couleur du texte activé
+          toggleSwitch1.disabled = false; // Désactiver le bouton
+        } else {
+           observ1.textContent = "Désactivé";
+            observ1.style.color = "red"; // Couleur du texte désactivé (rouge)
+            toggleSwitch1.disabled = true; // Désactiver le bouton
+          }
+          });
+
+          toggleSwitch1.addEventListener('change', function() {
+        const isChecked = toggleSwitch1.checked;
+
+        sendValueToFirebase('recev/etat2', isChecked ? 1 : 0);
+        });
+
+                  // Ajouter un écouteur d'événements sur le bouton pour envoyer 1 ou 0 dans Firebase
+          const firebaseRef2 = firebase.database().ref('recev/etat3');     
+          toggleSwitch1.addEventListener('change', function() {
+            if (toggleSwitch1.checked) {
+              // Si le bouton est activé, envoyer 1 dans Firebase
+              firebaseRef2.set(1);
+              observ1.textContent = "Activé";
+              observ1.style.color = "blue";
+            } else {
+              // Si le bouton est désactivé, envoyer 0 dans Firebase
+              firebaseRef2.set(0);
+              observ1.textContent = "Désactivé";
+              observ1.style.color = "red";
+            }
+          });
+    //-----------------------------------------------------------------------------------
+
  // valeur de CDF nestor
  database.ref("CDF/NESTOR KIBUKA").on("value", (snapshot) => {
         const CDF = snapshot.val();
@@ -136,7 +182,5 @@
     }
         });
   </script>
-<script src="btn.js" defer></script>
-<script src="form.js" defer></script>
 </body>
 </html>

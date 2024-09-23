@@ -300,7 +300,7 @@
         document.getElementById("ldr2Value").textContent = ldr2Value + " m³";
                 // Vérifie si la valeur existante est valide et effectue la soustraction
                 if (ldr2Value !== null && !isNaN(ldr2Value)) {
-                  var litre = 200;
+                  var litre = 100;
                   var result = ldr2Value * litre;
       firebase.database().ref('CDF/BERNARD CHIBARAMA').set(result)
     }
