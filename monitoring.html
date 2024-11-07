@@ -289,7 +289,7 @@
                 // pour effectuer la conversion de litre en fc
                 if (ldr1Value !== null && !isNaN(ldr1Value)) {
                   var litre = 200;
-                  var result = ldr1Value * litre;
+                  var result = Math.round(ldr1Value * litre);
       firebase.database().ref('CDF/NESTOR KIBUKA').set(result)
     }
         });
@@ -345,6 +345,7 @@
         const firebaseRef1 = firebase.database().ref('recev/etat');
         const firebaseRef2 = firebase.database().ref('recev/etat2');
 
+
         // Fonction pour envoyer la valeur à Firebase
         function sendValueToFirebase(ref, value) {
         const firebaseRef = firebase.database().ref(ref);
@@ -367,10 +368,12 @@
           observ1.textContent = "Activé";
           observ1.style.color = "blue"; // Couleur du texte activé
           toggleSwitch1.disabled = false; // Désactiver le bouton
+          firebase.database().ref('test/int').set(1)
         } else {
            observ1.textContent = "Désactivé";
             observ1.style.color = "red"; // Couleur du texte désactivé (rouge)
             toggleSwitch1.disabled = true; // Désactiver le bouton
+            firebase.database().ref('test/int').set(0)
           }
           });
 

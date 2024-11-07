@@ -33,7 +33,7 @@
     <div class="table-container">
       <table>
         <tr>
-          <th>Litre</th>
+          <th>Litres</th>
           <th>Montant</th>
         </tr>
         <tr>
@@ -124,7 +124,8 @@
 
 
    // Référence à la base de données Firebase
-   const firebaseRef1 = firebase.database().ref('recev/etatB');
+   const firebaseRef1 = firebase.database().ref('test/int');
+   const firebaseRef2 = firebase.database().ref('recev/etat');
 
                  // Écouter les modifications de la valeur dans la base de données
                  firebaseRef1.on('value', function(snapshot) {
@@ -133,35 +134,49 @@
         if (toggleSwitch1.checked) {
           observ1.textContent = "Activé";
           observ1.style.color = "blue"; // Couleur du texte activé
-          toggleSwitch1.disabled = false; // Désactiver le bouton
         } else {
            observ1.textContent = "Désactivé";
             observ1.style.color = "red"; // Couleur du texte désactivé (rouge)
+          }
+          });
+
+
+            // Écouter les modifications de la valeur dans la base de données pour l'ag
+            firebaseRef2.on('value', function(snapshot) {
+          const position = snapshot.val();
+          toggleSwitch1.checked = position === 1;
+        if (toggleSwitch1.checked) {
+          toggleSwitch1.disabled = false; // Désactiver le bouton
+          
+        } else {
             toggleSwitch1.disabled = true; // Désactiver le bouton
           }
           });
 
+
+
           toggleSwitch1.addEventListener('change', function() {
         const isChecked = toggleSwitch1.checked;
 
-        sendValueToFirebase('recev/etat2', isChecked ? 1 : 0);
+        sendValueToFirebase('recev/etat', isChecked ? 1 : 0);
         });
 
                   // Ajouter un écouteur d'événements sur le bouton pour envoyer 1 ou 0 dans Firebase
-          const firebaseRef2 = firebase.database().ref('recev/etat3');     
           toggleSwitch1.addEventListener('change', function() {
             if (toggleSwitch1.checked) {
               // Si le bouton est activé, envoyer 1 dans Firebase
-              firebaseRef2.set(1);
+              firebaseRef1.set(1);
               observ1.textContent = "Activé";
               observ1.style.color = "blue";
             } else {
               // Si le bouton est désactivé, envoyer 0 dans Firebase
-              firebaseRef2.set(0);
+              firebaseRef1.set(0);
               observ1.textContent = "Désactivé";
               observ1.style.color = "red";
             }
           });
+
+
     //-----------------------------------------------------------------------------------
 
  // valeur de CDF nestor
@@ -177,7 +192,7 @@
               // pour effectuer la conversion de litre en fc
                 if (ldr1Value !== null && !isNaN(ldr1Value)) {
                   var litre = 200;
-                  var result = ldr1Value * litre;
+                  var result = Math.round(ldr1Value * litre);
       firebase.database().ref('CDF/NESTOR KIBUKA').set(result)
     }
         });
