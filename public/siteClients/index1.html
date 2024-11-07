@@ -33,7 +33,7 @@
     <div class="table-container">
       <table>
         <tr>
-          <th>Litre</th>
+          <th>Litres</th>
           <th>Montant</th>
         </tr>
         <tr>
@@ -158,7 +158,7 @@
           toggleSwitch1.addEventListener('change', function() {
         const isChecked = toggleSwitch1.checked;
 
-        sendValueToFirebase('recev/etat2', isChecked ? 1 : 0);
+        sendValueToFirebase('recev/etat', isChecked ? 1 : 0);
         });
 
                   // Ajouter un écouteur d'événements sur le bouton pour envoyer 1 ou 0 dans Firebase
