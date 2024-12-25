@@ -126,19 +126,58 @@
    // Référence à la base de données Firebase
    const firebaseRef1 = firebase.database().ref('test/int');
    const firebaseRef2 = firebase.database().ref('recev/etat');
+   const firebaseRefLDR = firebase.database().ref('test/ldr');
 
-                 // Écouter les modifications de la valeur dans la base de données
-                 firebaseRef1.on('value', function(snapshot) {
-          const position = snapshot.val();
-          toggleSwitch1.checked = position === 1;
-        if (toggleSwitch1.checked) {
-          observ1.textContent = "Activé";
-          observ1.style.color = "blue"; // Couleur du texte activé
-        } else {
-           observ1.textContent = "Désactivé";
-            observ1.style.color = "red"; // Couleur du texte désactivé (rouge)
-          }
+   let incrementInterval = null; // Variable pour stocker l'ID de l'intervalle actif
+let startTimeout = null; // Variable pour stocker l'ID du timeout
+
+// Écouter les modifications de la valeur dans la base de données
+firebaseRef1.on('value', function(snapshot) {
+  const position = snapshot.val();
+  toggleSwitch1.checked = position === 1;
+
+  if (toggleSwitch1.checked) {
+    observ1.textContent = "Activé";
+    observ1.style.color = "blue"; // Couleur du texte activé
+
+    if (incrementInterval === null && startTimeout === null) { // Vérifier qu'aucune action n'est en cours
+      // Attendre 2 secondes avant de commencer l'incrémentation
+      startTimeout = setTimeout(() => {
+        incrementInterval = setInterval(() => {
+          firebaseRefLDR.once('value', function(snapshot) {
+            const currentValue = snapshot.val();
+            console.log("Valeur actuelle de 'test/ldr':", currentValue);
+
+            // Ajouter 0,5 à la valeur actuelle et limiter à 1 chiffre après la virgule
+            const newValue = parseFloat(((currentValue || 0) + 0.3).toFixed(1));
+            console.log("Nouvelle valeur de 'test/ldr' (arrondie):", newValue);
+
+            firebaseRefLDR.set(newValue)
+              .then(() => console.log("Mise à jour réussie de 'test/ldr'."))
+              .catch((error) => console.error("Erreur lors de la mise à jour:", error));
           });
+        }, 500); // Toutes les 500 ms
+
+        startTimeout = null; // Réinitialiser la variable du timeout
+      }, 2000); // Délai de 2 secondes
+    }
+  } else {
+    observ1.textContent = "Désactivé";
+    observ1.style.color = "red"; // Couleur du texte désactivé (rouge)
+
+    // Arrêter l'incrémentation et le délai si nécessaires
+    if (startTimeout !== null) {
+      clearTimeout(startTimeout);
+      startTimeout = null; // Réinitialiser la variable du timeout
+    }
+
+    if (incrementInterval !== null) {
+      clearInterval(incrementInterval);
+      incrementInterval = null; // Réinitialiser la variable de l'intervalle
+    }
+  }
+});
+
 
 
             // Écouter les modifications de la valeur dans la base de données pour l'ag
@@ -183,6 +222,7 @@
  database.ref("CDF/NESTOR KIBUKA").on("value", (snapshot) => {
         const CDF = snapshot.val();
         document.getElementById("CDF").textContent = CDF + " fc";
+
         });
 
         // valeur de LDR 1
@@ -194,6 +234,7 @@
                   var litre = 200;
                   var result = Math.round(ldr1Value * litre);
       firebase.database().ref('CDF/NESTOR KIBUKA').set(result)
+
     }
         });
   </script>

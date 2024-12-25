@@ -395,29 +395,33 @@
 
 
 
-        // Écouter les événements de changement d'état des boutons
-        toggleSwitch1.addEventListener('change', function() {
-        const isChecked = toggleSwitch1.checked;
-        const nom = 'NESTOR KIBUKA';
-        const telephone = '+243 971195065'
-        const adresse = 'C.gombe Q.funa Av.mukelenge N°10';
-        const compteur ='__';
-        const montant = '__';
+// Écouter les événements de changement d'état des boutons
+toggleSwitch1.addEventListener('change', function () {
+  // Lire la valeur de la référence Firebase
+  database.ref("CDF/NESTOR KIBUKA").once("value", (snapshot) => {
+    const CDF = snapshot.val(); // Récupérer la valeur actuelle
+    const isChecked = toggleSwitch1.checked;
+    const nom = 'NESTOR KIBUKA';
+    const telephone = '+243 971195065';
+    const adresse = 'C.gombe Q.funa Av.mukelenge N°10';
+    const compteur = '10002468';
+    const montant = CDF; // Utiliser la valeur récupérée ici
 
-        sendValueToFirebase('recev/etat', isChecked ? 1 : 0);
-        if (toggleSwitch1.checked) {
-          observ1.textContent = "Activé";
-          observ1.style.color = "blue"; // Couleur du texte activé
-          sendElementsToFirebase('elements/bouton1', null); // Supprimer les données
-          
-        } else {
-          observ1.textContent = "Désactivé";
-          observ1.style.color = "red"; // Couleur du texte désactivé (rouge)
-          sendElementsToFirebase('elements/bouton1', { nom, telephone, adresse, compteur, montant });
+    // Envoyer la valeur d'état à Firebase
+    sendValueToFirebase('recev/etat', isChecked ? 1 : 0);
 
-          
-        }
-        });
+    if (toggleSwitch1.checked) {
+      observ1.textContent = "Activé";
+      observ1.style.color = "blue"; // Couleur du texte activé
+      sendElementsToFirebase('elements/bouton1', null); // Supprimer les données
+    } else {
+      observ1.textContent = "Désactivé";
+      observ1.style.color = "red"; // Couleur du texte désactivé (rouge)
+      sendElementsToFirebase('elements/bouton1', { nom, telephone, adresse, compteur, montant });
+    }
+  });
+});
+
 
 
         toggleSwitch2.addEventListener('change', function() {
@@ -425,8 +429,8 @@
         const nom = 'BERNARD CHIBARAMA';
         const telephone = '+243 8245648910'
         const adresse = 'C.Barumbu Q.funa Av.mukelenge N°08';
-        const compteur ='__';
-        const montant = '__';
+        const compteur ='1000249';
+        const montant = '30000';
 
         sendValueToFirebase('recev/etat2', isChecked ? 1 : 0);
         if (toggleSwitch2.checked) {
